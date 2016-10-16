@@ -1,4 +1,5 @@
 const helpers = require('./helpers')
+    , webpack = require('webpack')
     , webpackMerge = require('webpack-merge')
     , commonConfig = require('./webpack.common.js')
     ; 
@@ -16,8 +17,8 @@ const DefinePlugin = require('webpack/lib/DefinePlugin')
 const ENV = process.env.ENV = process.env.NODE_ENV = 'development'
     , HOST = process.env.HOST || 'localhost'
     , PORT = process.env.PORT || 3000
-    , HMR = helpers.hasProcessFlag('hot')
-    , METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
+    , HMR = helpers.webpackScripts('hot')
+    , METADATA = webpackMerge(commonConfig.metadata, {
       host: HOST,
       port: PORT,
       ENV: ENV,
@@ -29,10 +30,10 @@ const ENV = process.env.ENV = process.env.NODE_ENV = 'development'
  * Webpack configuration
  */
 module.exports = function(options) {
-  return webpackMerge(commonConfig({env: ENV}), {
+  options = webpackMerge({env: ENV}, options)
+  return webpackMerge(commonConfig(options), {
 
-    metadata: METADATA,
-    debug: true,
+    // metadata: METADATA,
     devtool: 'cheap-module-source-map',
     output: {
       path: helpers.root('dist'),
@@ -44,6 +45,17 @@ module.exports = function(options) {
     },
 
     plugins: [
+      new webpack.LoaderOptionsPlugin({
+        minimize: false,
+        debug: true,
+        options: {
+          tslint: {
+            emitErrors: false,
+            failOnHint: false,
+            resourcePath: 'src'
+          },
+        }
+      }),          
       new DefinePlugin({
         'ENV': JSON.stringify(METADATA.ENV),
         'HMR': METADATA.HMR,
@@ -56,12 +68,6 @@ module.exports = function(options) {
       new NamedModulesPlugin(),
     ],
 
-    tslint: {
-      emitErrors: false,
-      failOnHint: false,
-      resourcePath: 'src'
-    },
-
     devServer: {
       port: METADATA.port,
       host: METADATA.host,
@@ -72,15 +78,6 @@ module.exports = function(options) {
       },
       outputPath: helpers.root('dist')
     },
-
-    node: {
-      global: 'window',
-      crypto: 'empty',
-      process: true,
-      module: false,
-      clearImmediate: false,
-      setImmediate: false
-    }
 
   });
 }

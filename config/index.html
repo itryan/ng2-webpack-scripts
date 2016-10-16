@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= htmlWebpackPlugin.options.title || 'Webpack App'%></title>
+  <% if (htmlWebpackPlugin.options.isDevServer) { %>
+  <script src="/webpack-dev-server.js"></script>
+  <% } %>
+  <base href="<%= htmlWebpackPlugin.options.baseUrl || '/' %>">
+</head>
+<body>
+  <app-root>
+    Loading...
+  </app-root>
+</body>
+</html>

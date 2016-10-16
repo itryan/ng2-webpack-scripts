@@ -1,7 +1,16 @@
 const webpackMerge = require('webpack-merge')
-    , path = require('path')
-    , fs = require('fs')
-    , helpers = require('./config/helpers')
+  , path = require('path')
+  , fs = require('fs')
+  , helpers = require('./config/helpers')
+
+/*
+ * Webpack Constants
+ */
+const METADATA = {
+  title: 'Angular2 Webpack Starter',
+  baseUrl: '/',
+  isDevServer: helpers.isWebpackDevServer()
+};
 
 module.exports = function (options) {
 
@@ -15,15 +24,13 @@ module.exports = function (options) {
       config = require('./config/webpack.dev');
       env = 'development';
   }
-  
-  options = options || { };
+
+  options = webpackMerge({ metadata: METADATA }, options || {});
   options['env'] = env;
-  console.log(options);
 
   var mergeFile = helpers.root('webpack/webpack.merge.js')
   var finalConfig = config(options);
-  if (fs.existsSync(mergeFile))
-  {
+  if (fs.existsSync(mergeFile)) {
     var exConfig = require(mergeFile);
     finalConfig = webpackMerge(finalConfig, exConfig(options));
   }

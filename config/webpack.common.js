@@ -1,44 +1,35 @@
 const webpack = require('webpack')
-    , helpers = require('./helpers')
-    ;
+  , webpackMerge = require('webpack-merge')
+  , path = require('path')
+  , helpers = require('./helpers')
+  ;
 
 /*
  * Webpack Plugins
  */
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-    , HtmlWebpackPlugin = require('html-webpack-plugin')
-    , ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin
-    , AssetsPlugin = require('assets-webpack-plugin')
-    , ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin')
-    , ExtractTextPlugin = require('extract-text-webpack-plugin')
-    ;
-
-/*
- * Webpack Constants
- */
-const METADATA = {
-  title: 'Angular2 Webpack Starter',
-  baseUrl: '/',
-  isDevServer: helpers.isWebpackDevServer()
-};
+  , HtmlWebpackPlugin = require('html-webpack-plugin')
+  , ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin
+  , AssetsPlugin = require('assets-webpack-plugin')
+  , ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin')
+  , ExtractTextPlugin = require('extract-text-webpack-plugin')
+  ;
 
 /*
  * Webpack configuration
  */
-module.exports = function(options) {
+module.exports = function (options) {
   isProd = options.env === 'production';
+
   return {
-
-    metadata: METADATA,
-
     entry: {
-      'polyfills': './src/webpack/polyfills.ts',
-      'vendor':    './src/webpack/vendor.ts',
-      'main':      './src/webpack/main.ts'
+      'polyfills': './webpack/polyfills.entry.ts',
+      'vendor': './webpack/vendor.entry.ts',
+      'main': './webpack/main.entry.ts'
     },
 
     resolve: {
-      extensions: ['', '.ts', '.js', '.json'],
+      extensions: ['.ts', '.js', '.json'],
       modules: [helpers.root('src'), helpers.root('node_modules')],
     },
 
@@ -56,17 +47,17 @@ module.exports = function(options) {
           test: /\.css$/,
           exclude: helpers.root('src'),
           loaders: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css'] })
-        },       
+        },
         {
           test: /\.scss$/,
           exclude: helpers.root('src/app'),
-          loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css', 'postcss', 'sass']})
+          loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css', 'postcss', 'sass'] })
         },
         { test: /\.scss$/, include: helpers.root('src/app'), loader: 'raw!postcss!sass' },
         {
           test: /\.html$/,
           loader: 'raw-loader',
-          exclude: [helpers.root('src/webpack/index.html')]
+          exclude: [helpers.webpackScripts('index.html')]
         },
         {
           test: /\.(jpg|png|gif)$/,
@@ -84,15 +75,15 @@ module.exports = function(options) {
         /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
         helpers.root('src')
       ),
-      new HtmlWebpackPlugin({
-        template: 'src/webpack/index.html',
+      new HtmlWebpackPlugin(webpackMerge(options.metadata, {
+        template: path.resolve(__dirname, 'index.html'),
         chunksSortMode: 'dependency'
-      }),
-      new ExtractTextPlugin({filename: 'css/[name].[hash].css', disable: false})      
+      })),
+      new ExtractTextPlugin({ filename: 'css/[name].[hash].css', disable: false })
     ],
 
     node: {
-      global: 'window',
+      global: true,
       crypto: 'empty',
       process: true,
       module: false,

@@ -15,6 +15,12 @@ function root(args) {
   return path.join.apply(path, [ROOT].concat(args));
 }
 
+function webpackScripts(args) {
+  args = Array.prototype.slice.call(arguments, 0);
+  return path.join.apply(path, [__dirname].concat(args));
+}
+
 exports.hasProcessFlag = hasProcessFlag;
 exports.isWebpackDevServer = isWebpackDevServer;
 exports.root = root;
+exports.webpackScripts = webpackScripts;
