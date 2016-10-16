@@ -1,6 +1,6 @@
 {
   "name": "ng2-webpack-scripts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Scripts for bundling angular2 with webpack",
   "main": "index.js",
   "scripts": {
