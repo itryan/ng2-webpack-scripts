@@ -29,12 +29,12 @@ module.exports = function (options) {
     },
 
     resolve: {
-      extensions: ['.ts', '.js', '.json'],
+      extensions: ['.ts', '.js'],
       modules: [helpers.root('src'), helpers.root('node_modules')],
     },
 
     module: {
-      loaders: [
+      rules: [
         {
           test: /\.ts$/,
           loaders: [
@@ -43,17 +43,25 @@ module.exports = function (options) {
           ],
           exclude: [/\.(spec|e2e)\.ts$/]
         },
+
+        // css file outside src folder (usually from external library) will be passed to css-loader directly
         {
           test: /\.css$/,
-          exclude: helpers.root('src'),
+          exclude: helpers.root('src/app'),
           loaders: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css'] })
         },
+
+        // scss outside /src/app folder will be bundled into external css file
         {
           test: /\.scss$/,
-          exclude: helpers.root('src/app'),
-          loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css', 'postcss', 'sass'] })
+          exclude: helpers.root('src/app'), //'style!css!postcss!sass'
+          loader:  ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css', 'postcss', 'sass'] })
         },
+
+        // src/app/**/*.scss folder (imported by component styleUrls property) will be resolved into string and passed to styles property
+        { test: /\.css$/, include: helpers.root('src/app'), loader: 'raw!css' },
         { test: /\.scss$/, include: helpers.root('src/app'), loader: 'raw!postcss!sass' },
+
         {
           test: /\.html$/,
           loader: 'raw-loader',
