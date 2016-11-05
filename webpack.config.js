@@ -18,6 +18,10 @@ module.exports = function (options) {
   var env;
 
   switch (process.env.NODE_ENV) {
+    case 'test':
+    default:
+      config = require('./config/webpack.test');
+      env = 'test';    
     case 'dev':
     case 'development':
     default:

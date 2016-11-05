@@ -43,7 +43,7 @@
   },
   "homepage": "https://github.com/itryan/ng2-webpack-scripts#readme",
   "devDependencies": {
-    "typescript": "^2.0.3",
-    "semantic-release": "^4.3.5"
+    "semantic-release": "^4.3.5",
+    "typescript": "^2.0.7"
   }
 }
