@@ -8,8 +8,16 @@ const ProvidePlugin = require('webpack/lib/ProvidePlugin')
   , ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin')
   ;
 
-module.exports = function (options) {
-  return {
+module.exports = function (projectConfig) {
+
+  var awesomeTypeScriptOption = {
+    sourceMap: false,
+    inlineSourceMap: true,
+    module: "commonjs",
+    compilerOptions: { removeComments: true }
+  };
+
+  var webpackConfig = {
 
     devtool: 'inline-source-map',
     resolve: {
@@ -20,14 +28,15 @@ module.exports = function (options) {
     module: {
       rules: [
         {
-          test: /\.ts$/, loader: 'awesome-typescript-loader', query: {
-            sourceMap: false,
-            inlineSourceMap: true,
-            module: "commonjs",
-            compilerOptions: { removeComments: true }
-          }, exclude: [/\.e2e\.ts$/]
+          test: /\.ts$/,
+          loaders: [
+            { loader: 'awesome-typescript-loader', query: awesomeTypeScriptOption },
+            { loader: 'angular2-template-loader' },
+          ],
+          exclude: [/\.e2e\.ts$/]
         },
-        { test: /\.(js|ts)$/, loader: 'istanbul-instrumenter-loader', include: helpers.root('src'), exclude: [/\.(e2e|spec)\.ts$/, /node_modules/], enforce: 'post', }
+        { test: /\.(js|ts)$/, loader: 'istanbul-instrumenter-loader', include: helpers.root('src'), exclude: [/\.(e2e|spec)\.ts$/, /node_modules/], enforce: 'post', },
+        { test: /\.html$/, loader: 'raw-loader', exclude: projectConfig.htmlEntry }
       ]
     },
     plugins: [
@@ -46,4 +55,6 @@ module.exports = function (options) {
     ],
 
   };
+
+  return webpackConfig;
 }

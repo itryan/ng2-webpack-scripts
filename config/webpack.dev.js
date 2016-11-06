@@ -29,18 +29,18 @@ const ENV = process.env.ENV = process.env.NODE_ENV = 'development'
 /**
  * Webpack configuration
  */
-module.exports = function(options) {
-  options = webpackMerge({env: ENV}, options)
-  return webpackMerge(commonConfig(options), {
+module.exports = function(projectConfig) {
+  projectConfig = webpackMerge({env: ENV}, projectConfig)
+  return webpackMerge(commonConfig(projectConfig), {
 
     // metadata: METADATA,
     devtool: 'cheap-module-source-map',
     output: {
       path: helpers.root('dist'),
-      filename: '[name].bundle.js',
+      filename: '[name].umd.js',
       chunkFilename: '[id].chunk.js',
       library: 'ac_[name]',
-      libraryTarget: 'var',
+      libraryTarget: 'umd',
     },
 
     plugins: [

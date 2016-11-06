@@ -18,15 +18,11 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 /*
  * Webpack configuration
  */
-module.exports = function (options) {
-  isProd = options.env === 'production';
+module.exports = function (projectConfig) {
+  isProd = projectConfig.env === 'production';
 
-  return {
-    entry: {
-      'polyfills': './webpack/polyfills.entry.ts',
-      'vendor': './webpack/vendor.entry.ts',
-      'main': './webpack/main.entry.ts'
-    },
+  var webpackConfig = {
+    entry: projectConfig.entry,
 
     resolve: {
       extensions: ['.ts', '.js'],
@@ -55,13 +51,17 @@ module.exports = function (options) {
         {
           test: /\.scss$/,
           exclude: helpers.root('src/app'), //'style!css!postcss!sass'
-          loader:  ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css', 'postcss', 'sass'] })
+          loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css', 'postcss', 'sass'] })
         },
 
         // src/app/**/*.scss folder (imported by component styleUrls property) will be resolved into string and passed to styles property
         { test: /\.css$/, include: helpers.root('src/app'), loader: 'raw!css' },
-        { test: /\.scss$/, include: helpers.root('src/app'), loader: 'raw!postcss!sass' },
-
+        // { test: /\.scss$/, include: helpers.root('src/app'), loader: 'raw!postcss!sass' },
+        {
+          test: /\.scss$/,
+          include: helpers.root('src/app'), //'style!css!postcss!sass'
+          loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css', 'postcss', 'sass'] })
+        },
         {
           test: /\.html$/,
           loader: 'raw-loader',
@@ -70,23 +70,27 @@ module.exports = function (options) {
         {
           test: /\.(jpg|png|gif)$/,
           loader: 'file'
-        }
+        },
+        {
+          test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+          loader: 'file?name=fonts/[name].[hash].[ext]?'
+        },
       ],
     },
 
     plugins: [
       new ForkCheckerPlugin(),
       new webpack.optimize.CommonsChunkPlugin({
-        name: ['polyfills', 'vendor'].reverse()
+        name: (projectConfig.commonChunks || []).reverse()
       }),
       new ContextReplacementPlugin(
         /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
         helpers.root('src')
       ),
-      new HtmlWebpackPlugin(webpackMerge(options.metadata, {
-        template: path.resolve(__dirname, 'index.html'),
-        chunksSortMode: 'dependency'
-      })),
+      // new HtmlWebpackPlugin(webpackMerge(projectConfig.metadata, {
+      //   template: path.resolve(__dirname, 'index.html'),
+      //   chunksSortMode: 'dependency'
+      // })),
       new ExtractTextPlugin({ filename: 'css/[name].[hash].css', disable: false })
     ],
 
@@ -100,4 +104,18 @@ module.exports = function (options) {
     }
 
   };
+
+  // attach plugins
+
+  (projectConfig.htmlEntry || [])
+    .forEach(index => webpackConfig.plugins.push(
+      new HtmlWebpackPlugin(
+        webpackMerge(projectConfig.metadata, {
+          template: index,
+          filename: path.basename(index),
+          chunksSortMode: 'dependency'
+        })
+      )));
+
+  return webpackConfig;
 }

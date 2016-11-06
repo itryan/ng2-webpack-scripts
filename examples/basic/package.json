@@ -7,7 +7,7 @@
     "rimraf": "rimraf",
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean:dist": "npm run rimraf -- dist",
-    "webpack": "npm run clean:dist&& webpack --config node_modules/ng2-webpack-scripts/webpack.config.js --progress --profile",
+    "webpack": "npm run clean:dist&& webpack --config node_modules/ng2-webpack-scripts/default/webpack.config.js --progress --profile",
     "server:dev": "webpack-dev-server --config node_modules/ng2-webpack-scripts/webpack.config.js --progress --profile --watch --content-base src/",
     "start": "npm run server:dev"
   },
