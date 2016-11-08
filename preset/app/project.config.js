@@ -1,4 +1,4 @@
-var helpers = require('../config/helpers')
+var helpers = require('../../config/helpers')
   , path = require('path')
   ;
 

@@ -21,6 +21,11 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 module.exports = function (projectConfig) {
   isProd = projectConfig.env === 'production';
 
+  var awesomeTypeScriptOption = {
+    "forkChecker": true,
+    "useWebpackText": true,
+  };
+
   var webpackConfig = {
     entry: projectConfig.entry,
 
@@ -29,14 +34,13 @@ module.exports = function (projectConfig) {
       modules: [helpers.root('src'), helpers.root('node_modules')],
     },
 
+    externals: [/^\@angular\//, /^rxjs\//],
+
     module: {
       rules: [
         {
           test: /\.ts$/,
-          loaders: [
-            'awesome-typescript-loader',
-            'angular2-template-loader'
-          ],
+          loaders: ['angular2-template-loader', 'awesome-typescript-loader'],
           exclude: [/\.(spec|e2e)\.ts$/]
         },
 
@@ -87,10 +91,7 @@ module.exports = function (projectConfig) {
         /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
         helpers.root('src')
       ),
-      // new HtmlWebpackPlugin(webpackMerge(projectConfig.metadata, {
-      //   template: path.resolve(__dirname, 'index.html'),
-      //   chunksSortMode: 'dependency'
-      // })),
+
       new ExtractTextPlugin({ filename: 'css/[name].[hash].css', disable: false })
     ],
 

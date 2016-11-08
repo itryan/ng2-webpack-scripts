@@ -1,7 +1,7 @@
 const webpackMerge = require('webpack-merge')
   , path = require('path')
   , fs = require('fs')
-  , helpers = require('../config/helpers')
+  , helpers = require('../../config/helpers')
   , projectConfig = require('./project.config')  
 
 /*
@@ -16,12 +16,12 @@ module.exports = function (options) {
 
   switch (process.env.NODE_ENV) {
     case 'test':
-      config = require('../config/webpack.test');
+      config = require('../../config/webpack.test');
       env = 'test';
     case 'dev':
     case 'development':
     default:
-      config = require('../config/webpack.dev');
+      config = require('../../config/webpack.dev');
       env = 'development';
   }
 
