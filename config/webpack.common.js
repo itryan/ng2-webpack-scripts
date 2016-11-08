@@ -34,8 +34,6 @@ module.exports = function (projectConfig) {
       modules: [helpers.root('src'), helpers.root('node_modules')],
     },
 
-    externals: [/^\@angular\//, /^rxjs\//],
-
     module: {
       rules: [
         {
@@ -69,7 +67,7 @@ module.exports = function (projectConfig) {
         {
           test: /\.html$/,
           loader: 'raw-loader',
-          exclude: [helpers.webpackScripts('index.html')]
+          exclude: projectConfig.htmlEntry
         },
         {
           test: /\.(jpg|png|gif)$/,

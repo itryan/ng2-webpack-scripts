@@ -30,8 +30,8 @@ module.exports = function (projectConfig) {
         {
           test: /\.ts$/,
           loaders: [
-            { loader: 'awesome-typescript-loader', query: awesomeTypeScriptOption },
             { loader: 'angular2-template-loader' },
+            { loader: 'awesome-typescript-loader', query: awesomeTypeScriptOption },            
           ],
           exclude: [/\.e2e\.ts$/]
         },
