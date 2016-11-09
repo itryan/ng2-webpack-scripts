@@ -58,12 +58,12 @@ module.exports = function (projectConfig) {
 
         // src/app/**/*.scss folder (imported by component styleUrls property) will be resolved into string and passed to styles property
         { test: /\.css$/, include: helpers.root('src/app'), loader: 'raw!css' },
-        // { test: /\.scss$/, include: helpers.root('src/app'), loader: 'raw!postcss!sass' },
-        {
-          test: /\.scss$/,
-          include: helpers.root('src/app'), //'style!css!postcss!sass'
-          loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css', 'postcss', 'sass'] })
-        },
+        { test: /\.scss$/, include: helpers.root('src/app'), loader: 'raw!postcss!sass' },
+        // {
+        //   test: /\.scss$/,
+        //   include: helpers.root('src/app'), //'style!css!postcss!sass'
+        //   loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css', 'postcss', 'sass'] })
+        // },
         {
           test: /\.html$/,
           loader: 'raw-loader',

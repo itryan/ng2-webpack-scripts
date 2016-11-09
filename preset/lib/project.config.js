@@ -7,4 +7,5 @@ module.exports = {
     'index': './src/index.ts'
   },
   testBundle: './spec-bundle.js',
+  libraryTarget: 'umd'
 }

@@ -38,10 +38,10 @@ module.exports = function (projectConfig) {
     devtool: 'cheap-module-source-map',
     output: {
       path: helpers.root('dist'),
-      filename: '[name].umd.js',
+      filename: '[name].js',
       chunkFilename: '[id].chunk.js',
       library: 'ac_[name]',
-      libraryTarget: 'commonjs',
+      libraryTarget: projectConfig.libraryTarget || 'var',
     },
 
     plugins: [
