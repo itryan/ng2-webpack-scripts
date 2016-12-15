@@ -68,8 +68,7 @@ module.exports = function (projectConfig) {
       watchOptions: {
         aggregateTimeout: 300,
         poll: 1000
-      },
-      outputPath: helpers.root('dist')
+      }
     },
 
   }

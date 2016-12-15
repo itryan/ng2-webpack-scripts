@@ -9,7 +9,6 @@ const webpack = require('webpack')
  */
 const CopyWebpackPlugin = require('copy-webpack-plugin')
   , HtmlWebpackPlugin = require('html-webpack-plugin')
-  , ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin
   , AssetsPlugin = require('assets-webpack-plugin')
   , ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin')
   , ExtractTextPlugin = require('extract-text-webpack-plugin')
@@ -46,19 +45,19 @@ module.exports = function (projectConfig) {
         {
           test: /\.css$/,
           exclude: helpers.root('src/app'),
-          loaders: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css'] })
+          loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css-loader'] })
         },
 
         // scss outside /src/app folder will be bundled into external css file
         {
           test: /\.scss$/,
           exclude: helpers.root('src/app'), //'style!css!postcss!sass'
-          loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css', 'postcss', 'sass'] })
+          loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css-loader', 'postcss-loader', 'sass-loader'] })
         },
 
         // src/app/**/*.scss folder (imported by component styleUrls property) will be resolved into string and passed to styles property
-        { test: /\.css$/, include: helpers.root('src/app'), loader: 'raw!css' },
-        { test: /\.scss$/, include: helpers.root('src/app'), loader: 'raw!postcss!sass' },
+        { test: /\.css$/, include: helpers.root('src/app'), loader: 'raw-loader!css-loader' },
+        { test: /\.scss$/, include: helpers.root('src/app'), loader: 'raw-loader!postcss-loader!sass-loader' },
         // {
         //   test: /\.scss$/,
         //   include: helpers.root('src/app'), //'style!css!postcss!sass'
@@ -81,7 +80,6 @@ module.exports = function (projectConfig) {
     },
 
     plugins: [
-      new ForkCheckerPlugin(),
       new webpack.optimize.CommonsChunkPlugin({
         name: (projectConfig.commonChunks || []).reverse()
       }),
