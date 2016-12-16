@@ -51,11 +51,11 @@ module.exports = function (projectConfig) {
       }),
       new DefinePlugin({
         'ENV': JSON.stringify(METADATA.ENV),
-        'HMR': METADATA.HMR,
+        'HMR': JSON.stringify(METADATA.HMR),
         'process.env': {
           'ENV': JSON.stringify(METADATA.ENV),
           'NODE_ENV': JSON.stringify(METADATA.ENV),
-          'HMR': METADATA.HMR,
+          'HMR': JSON.stringify(METADATA.HMR),
         }
       }),
       new NamedModulesPlugin(),
