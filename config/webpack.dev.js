@@ -8,7 +8,7 @@ const helpers = require('./helpers')
  * Webpack Plugins
  */
 const DefinePlugin = require('webpack/lib/DefinePlugin')
-  , NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin')
+  // , NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin')
   ;
 
 /**
@@ -38,7 +38,7 @@ module.exports = function (projectConfig) {
     devtool: 'cheap-module-source-map',
     output: {
       path: helpers.root('dist'),
-      filename: '[name].js',
+      filename: '[name].bundle.js',
       chunkFilename: '[id].chunk.js',
       library: 'ac_[name]',
       libraryTarget: projectConfig.libraryTarget || 'var',
@@ -58,7 +58,6 @@ module.exports = function (projectConfig) {
           'HMR': JSON.stringify(METADATA.HMR),
         }
       }),
-      new NamedModulesPlugin(),
     ],
 
     devServer: {
